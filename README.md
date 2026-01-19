@@ -13,7 +13,7 @@
 
 ## Project Overview
 
-TriForge Assets is a full‑stack e‑commerce platform designed to sell high‑quality 3D digital models compatible with popular creation engines and tools such as Blender, Unity, and Unreal Engine. The platform focuses on creators, developers, and studios looking for production‑ready assets with clear licensing, fast delivery, and a clean purchasing experience.
+Puppet is a full‑stack e‑commerce platform designed to sell high‑quality 3D digital models compatible with popular creation engines and tools such as Blender, Unity, and Unreal Engine. The platform focuses on creators, developers, and studios looking for production‑ready assets with clear licensing, fast delivery, and a clean purchasing experience.
 
 The system will be built using modern web technologies and DevOps practices to ensure scalability, reliability, and ease of maintenance.
 
