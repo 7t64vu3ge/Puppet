@@ -8,7 +8,6 @@
 
 * **Name:** Sushant Kumar Ojha
 * **URN:** 2024-B-10052006
-* **Year:** 2024
 
 ---
 
