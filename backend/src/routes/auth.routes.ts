@@ -1,6 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
+import { authController } from "../controllers/auth.controller.js";
+import { requireAuth } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
@@ -30,5 +32,8 @@ router.get(
         res.json({ token, user: formattedUser });
     }
 );
+
+// Protected routes
+router.get("/me", requireAuth, authController.getCurrentUser);
 
 export default router;

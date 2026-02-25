@@ -1,6 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
+import { authController } from "../controllers/auth.controller.js";
+import { requireAuth } from "../middlewares/auth.middleware.js";
 const router = Router();
 router.get("/google", passport.authenticate("google", {
     scope: ["profile", "email"],
@@ -21,4 +23,6 @@ router.get("/google/callback", passport.authenticate("google", { session: false,
     };
     res.json({ token, user: formattedUser });
 });
+// Protected routes
+router.get("/me", requireAuth, authController.getCurrentUser);
 export default router;
