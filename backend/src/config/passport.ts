@@ -1,5 +1,6 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import User from "../models/user.model.js";
 
 passport.use(
     new GoogleStrategy(
@@ -9,14 +10,36 @@ passport.use(
             callbackURL: process.env.GOOGLE_CALLBACK_URL!,
         },
         async (_a, _r, profile, done) => {
-            // TODO: find or create user in DB
-            const user = {
-                googleId: profile.id,
-                email: profile.emails?.[0]?.value,
-                name: profile.displayName,
-                avatar: profile.photos?.[0]?.value,
-            };
-            done(null, user);
+            try {
+                const email = profile.emails?.[0]?.value || "";
+
+                // Find existing user by Google ID
+                let user = await User.findOne({ googleId: profile.id });
+
+                if (!user) {
+                    // Check if email already exists
+                    user = await User.findOne({ email });
+
+                    if (user) {
+                        // Link Google ID to existing email
+                        user.googleId = profile.id;
+                        await user.save();
+                    } else {
+                        // Create new user
+                        user = await User.create({
+                            googleId: profile.id,
+                            email,
+                            name: profile.displayName || "Unknown",
+                            avatar: profile.photos?.[0]?.value || "",
+                            role: "buyer", // default role
+                        });
+                    }
+                }
+
+                return done(null, user);
+            } catch (error) {
+                return done(error as Error, undefined);
+            }
         }
     )
 );
