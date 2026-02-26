@@ -4,8 +4,8 @@ export interface IAsset extends Document {
     title: string;
     description: string;
     price: number;
-    previewModelId: string; // Sketchfab UID
-    thumbnailUrl: string;
+    previewModelId?: string; // Sketchfab UID (optional)
+    thumbnailUrl?: string;   // (optional)
     ownerId: mongoose.Types.ObjectId; // ref: User
     createdAt: Date;
     updatedAt: Date;
@@ -14,10 +14,10 @@ export interface IAsset extends Document {
 const AssetSchema: Schema = new Schema(
     {
         title: { type: String, required: true, trim: true },
-        description: { type: String, required: true },
+        description: { type: String, default: "" },
         price: { type: Number, required: true, min: 0 },
-        previewModelId: { type: String, required: true }, // Sketchfab model UID
-        thumbnailUrl: { type: String, required: true },
+        previewModelId: { type: String }, // optional Sketchfab model UID
+        thumbnailUrl: { type: String },   // optional
         ownerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     },
     {
@@ -25,4 +25,8 @@ const AssetSchema: Schema = new Schema(
     }
 );
 
+// Text index for title search
+AssetSchema.index({ title: "text" });
+
 export default mongoose.model<IAsset>("Asset", AssetSchema);
+

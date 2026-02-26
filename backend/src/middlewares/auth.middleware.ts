@@ -1,6 +1,21 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
+export interface AuthPayload {
+    id: string;
+    googleId: string;
+    email: string;
+    role: "buyer" | "seller" | "admin";
+}
+
+// Merge AuthPayload into Express.User so passport and JWT middleware agree on the type
+declare global {
+    namespace Express {
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface User extends AuthPayload { }
+    }
+}
+
 export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
 
@@ -11,11 +26,10 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction) => 
     const token = authHeader.split(" ")[1];
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-        // Attach decoded user info to the request object
-        (req as any).user = decoded;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as AuthPayload;
+        req.user = decoded;
         next();
-    } catch (error) {
+    } catch {
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
     }
 };

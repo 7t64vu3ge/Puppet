@@ -10,9 +10,7 @@ router.get("/google", passport.authenticate("google", {
 }));
 router.get("/google/callback", passport.authenticate("google", { session: false, failureRedirect: "/login-failed" }), (req, res) => {
     const user = req.user;
-    const token = jwt.sign({ googleId: user.googleId, email: user.email }, process.env.JWT_SECRET, {
-        expiresIn: "7d",
-    });
+    const token = jwt.sign({ id: String(user._id), googleId: user.googleId, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
     // Format user output identically to the /api/me route
     const formattedUser = {
         id: user._id || user.id,
