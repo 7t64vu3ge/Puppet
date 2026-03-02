@@ -8,10 +8,10 @@ export class AuthController {
      */
     async getCurrentUser(req: Request, res: Response) {
         try {
-            const decodedUser = (req as any).user;
+            const user = req.user!;
 
             // Find fresh user details from the database
-            const targetUser = await User.findOne({ email: decodedUser.email }).select("-__v");
+            const targetUser = await User.findById(user.id).select("-__v");
 
             if (!targetUser) {
                 return res.status(404).json({ error: "User not found" });

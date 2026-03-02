@@ -19,7 +19,9 @@ router.get("/google/callback", passport.authenticate("google", { session: false,
         avatar: user.avatar,
         role: user.role
     };
-    res.json({ token, user: formattedUser });
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const userJson = encodeURIComponent(JSON.stringify(formattedUser));
+    res.redirect(`${frontendUrl}/?token=${token}&user=${userJson}`);
 });
 // Protected routes
 router.get("/me", requireAuth, authController.getCurrentUser);

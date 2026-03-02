@@ -31,7 +31,9 @@ router.get(
             role: user.role
         };
 
-        res.json({ token, user: formattedUser });
+        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+        const userJson = encodeURIComponent(JSON.stringify(formattedUser));
+        res.redirect(`${frontendUrl}/?token=${token}&user=${userJson}`);
     }
 );
 
