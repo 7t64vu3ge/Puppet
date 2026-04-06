@@ -7,6 +7,7 @@ export interface CreateAssetData {
     price: number;
     previewModelId?: string;
     thumbnailUrl?: string;
+    fileUrl?: string;
     ownerId: string;
 }
 
@@ -16,6 +17,7 @@ export interface UpdateAssetData {
     price?: number;
     previewModelId?: string;
     thumbnailUrl?: string;
+    fileUrl?: string;
 }
 
 export interface GetAssetsOptions {

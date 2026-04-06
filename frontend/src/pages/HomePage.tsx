@@ -5,22 +5,30 @@ import { fetchAssets } from '../lib/api';
 import AssetCard from '../components/AssetCard';
 
 const HomePage: React.FC = () => {
-    const { login, isAuthenticated } = useAuth();
+    const { login } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
     const [assets, setAssets] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [search, setSearch] = useState('');
+    const [category, setCategory] = useState('');
 
-    const loadAssets = async (query?: string) => {
+    const loadAssets = async (queryValue?: string, catValue?: string) => {
         setLoading(true);
+        setError(null);
         try {
-            const data = await fetchAssets({ search: query });
-            // Backend returns { data, total, page, limit }
-            const assetsArray = data.data || data.assets || [];
-            setAssets(assetsArray);
-        } catch (err) {
+            const finalQuery = [queryValue, catValue].filter(Boolean).join(' ').trim();
+            const data = await fetchAssets({ q: finalQuery });
+            
+            // Merge custom local assets and external Sketchfab results
+            const localAssets = data.local || [];
+            const externalAssets = data.external || [];
+            
+            setAssets([...localAssets, ...externalAssets]);
+        } catch (err: any) {
             console.error('Failed to load assets', err);
+            setError(err.response?.data?.error || 'Failed to communicate with the server.');
             setAssets([]);
         }
         setLoading(false);
@@ -48,7 +56,7 @@ const HomePage: React.FC = () => {
 
     // Load assets on initial mount (and when manually searching)
     useEffect(() => {
-        loadAssets();
+        loadAssets(search, category);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -69,10 +77,10 @@ const HomePage: React.FC = () => {
                         placeholder="Search assets..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && loadAssets(search)}
+                        onKeyDown={(e) => e.key === 'Enter' && loadAssets(search, category)}
                         style={{ flex: 1, background: 'transparent', border: 'none', color: 'white', padding: '0 16px', outline: 'none', fontSize: '1rem' }}
                     />
-                    <button className="btn btn-primary" onClick={() => loadAssets(search)}>Search</button>
+                    <button className="btn btn-primary" onClick={() => loadAssets(search, category)}>Search</button>
                 </div>
             </header>
 
@@ -81,14 +89,39 @@ const HomePage: React.FC = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
                     <h2 style={{ fontSize: '1.5rem' }}>Trending Assets</h2>
                     <div style={{ display: 'flex', gap: '8px' }}>
-                        <button className="btn btn-ghost" style={{ fontSize: '0.8rem' }}>Characters</button>
-                        <button className="btn btn-ghost" style={{ fontSize: '0.8rem' }}>Props</button>
-                        <button className="btn btn-ghost" style={{ fontSize: '0.8rem' }}>Environments</button>
+                        <button
+                            className={`btn ${category === '' ? 'btn-primary' : 'btn-ghost'}`}
+                            style={{ fontSize: '0.8rem', padding: '8px 16px' }}
+                            onClick={() => {
+                                setCategory('');
+                                loadAssets(search, '');
+                            }}
+                        >
+                            All
+                        </button>
+                        {['Characters', 'Props', 'Environments'].map((cat) => (
+                            <button 
+                                key={cat}
+                                className={`btn ${category === cat ? 'btn-primary' : 'btn-ghost'}`} 
+                                style={{ fontSize: '0.8rem', padding: '8px 16px' }}
+                                onClick={() => {
+                                    setCategory(cat);
+                                    loadAssets(search, cat);
+                                }}
+                            >
+                                {cat}
+                            </button>
+                        ))}
                     </div>
                 </div>
 
                 {loading ? (
                     <div style={{ textAlign: 'center', padding: '100px', color: 'var(--text-secondary)' }}>Loading assets...</div>
+                ) : error ? (
+                    <div className="glass" style={{ textAlign: 'center', padding: '80px', borderColor: 'rgba(239, 68, 68, 0.3)' }}>
+                        <p style={{ color: '#fca5a5', marginBottom: '16px' }}>{error}</p>
+                        <button className="btn btn-ghost" onClick={() => loadAssets(search, category)}>Try Again</button>
+                    </div>
                 ) : assets.length > 0 ? (
                     <div className="asset-grid">
                         {assets.map((asset) => (

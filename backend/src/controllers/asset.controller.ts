@@ -9,21 +9,28 @@ export class AssetController {
     async createAsset(req: Request, res: Response) {
         try {
             const { title, description, price, previewModelId, thumbnailUrl } = req.body;
+            const file = req.file;
 
             // Validate required fields
             if (!title || typeof title !== "string" || title.trim() === "") {
                 return res.status(400).json({ error: "title is required" });
             }
-            if (price === undefined || price === null || typeof price !== "number" || price < 0) {
+            if (price === undefined || price === null) {
                 return res.status(400).json({ error: "price must be a number >= 0" });
+            }
+            
+            const numericPrice = parseFloat(price);
+            if (isNaN(numericPrice) || numericPrice < 0) {
+                return res.status(400).json({ error: "price must be a valid number >= 0" });
             }
 
             const asset = await assetService.createAsset({
                 title: title.trim(),
                 description: description ?? "",
-                price,
+                price: numericPrice,
                 previewModelId,
                 thumbnailUrl,
+                fileUrl: file ? `/uploads/${file.filename}` : undefined,
                 ownerId: req.user!.id,
             });
 

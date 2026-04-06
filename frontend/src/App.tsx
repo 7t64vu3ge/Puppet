@@ -5,6 +5,10 @@ import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import AssetDetailPage from './pages/AssetDetailPage';
 import LoginPage from './pages/LoginPage';
+import GetSellerIdPage from './pages/GetSellerIdPage';
+import ProfilePage from './pages/ProfilePage';
+import SettingsPage from './pages/SettingsPage';
+import SellPage from './pages/SellPage';
 
 const App: React.FC = () => {
   return (
@@ -16,6 +20,10 @@ const App: React.FC = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/assets/:id" element={<AssetDetailPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/seller-id" element={<GetSellerIdPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/sell" element={<SellPage />} />
           </Routes>
         </main>
 

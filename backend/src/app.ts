@@ -5,11 +5,17 @@ import authRoutes from "./routes/auth.routes.js";
 import apiRoutes from "./routes/index.js";
 import { apiLimiter } from "./middlewares/rateLimit.js";
 
+import path from "path";
+
 const app = express();
 
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
+
+// Serve uploaded files statically
+app.use("/uploads", express.static(path.resolve("uploads")));
 
 // Apply rate limiter to all /api routes
 app.use("/api", apiLimiter);

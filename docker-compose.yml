@@ -1,0 +1,26 @@
+services:
+  backend:
+    image: ghcr.io/${OWNER}/puppet-backend:latest
+    container_name: puppet-backend
+    restart: always
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env.backend
+    networks:
+      - puppet-network
+
+  frontend:
+    image: ghcr.io/${OWNER}/puppet-frontend:latest
+    container_name: puppet-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - puppet-network
+
+networks:
+  puppet-network:
+    driver: bridge

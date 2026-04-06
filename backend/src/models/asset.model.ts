@@ -6,6 +6,7 @@ export interface IAsset extends Document {
     price: number;
     previewModelId?: string; // Sketchfab UID (optional)
     thumbnailUrl?: string;   // (optional)
+    fileUrl?: string;        // Asset file path (optional)
     ownerId: mongoose.Types.ObjectId; // ref: User
     createdAt: Date;
     updatedAt: Date;
@@ -18,6 +19,7 @@ const AssetSchema: Schema = new Schema(
         price: { type: Number, required: true, min: 0 },
         previewModelId: { type: String }, // optional Sketchfab model UID
         thumbnailUrl: { type: String },   // optional
+        fileUrl: { type: String },        // Path to the uploaded asset file
         ownerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     },
     {

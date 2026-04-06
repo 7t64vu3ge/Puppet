@@ -6,6 +6,11 @@ import { requireAuth } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
+// Test-only route for E2E automation
+if (process.env.NODE_ENV !== 'production') {
+    router.get("/test-session", authController.getTestSession.bind(authController));
+}
+
 router.get("/google", passport.authenticate("google", {
     scope: ["profile", "email"],
     prompt: "consent" // Forces account selection so "different" accounts can log in
@@ -41,6 +46,9 @@ router.get(
 
 // Protected routes
 router.get("/me", requireAuth, authController.getCurrentUser.bind(authController));
+router.put("/profile", requireAuth, authController.updateProfile.bind(authController));
+router.post("/change-password", requireAuth, authController.changePassword.bind(authController));
+router.post("/become-seller", requireAuth, authController.becomeSeller.bind(authController));
 router.post("/like/:id", requireAuth, authController.toggleLike.bind(authController));
 router.post("/buy/:id", requireAuth, authController.purchaseAsset.bind(authController));
 

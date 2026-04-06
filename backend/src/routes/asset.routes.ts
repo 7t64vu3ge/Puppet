@@ -3,6 +3,7 @@ import { assetController } from "../controllers/asset.controller.js";
 import { requireAuth } from "../middlewares/auth.middleware.js";
 import { requireRole } from "../middlewares/role.middleware.js";
 import { requireOwnerOrAdmin } from "../middlewares/ownership.middleware.js";
+import { upload } from "../middlewares/upload.middleware.js";
 
 const router = Router();
 
@@ -14,6 +15,7 @@ router.post(
     "/",
     requireAuth,
     requireRole("seller", "admin"),
+    upload.single("file"),
     assetController.createAsset.bind(assetController)
 );
 
