@@ -6,6 +6,8 @@ export interface IUser extends Document {
     name: string;
     avatar: string;
     role: "buyer" | "seller" | "admin";
+    likedAssets: string[];
+    purchasedAssets: string[];
     createdAt: Date;
 }
 
@@ -16,6 +18,8 @@ const UserSchema: Schema = new Schema(
         name: { type: String, required: true },
         avatar: { type: String },
         role: { type: String, enum: ["buyer", "seller", "admin"], default: "buyer" },
+        likedAssets: { type: [String], default: [] },
+        purchasedAssets: { type: [String], default: [] },
         createdAt: { type: Date, default: Date.now },
     },
     {

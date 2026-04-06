@@ -28,7 +28,9 @@ router.get(
             email: user.email,
             name: user.name,
             avatar: user.avatar,
-            role: user.role
+            role: user.role,
+            likedAssets: user.likedAssets || [],
+            purchasedAssets: user.purchasedAssets || []
         };
 
         const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
@@ -38,6 +40,8 @@ router.get(
 );
 
 // Protected routes
-router.get("/me", requireAuth, authController.getCurrentUser);
+router.get("/me", requireAuth, authController.getCurrentUser.bind(authController));
+router.post("/like/:id", requireAuth, authController.toggleLike.bind(authController));
+router.post("/buy/:id", requireAuth, authController.purchaseAsset.bind(authController));
 
 export default router;

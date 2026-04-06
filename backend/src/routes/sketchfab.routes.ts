@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { sketchfabController } from "../controllers/sketchfab.controller.js";
-import { requireAuth } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-// Sketchfab routes - protected by requireAuth so only logged in users can search
-router.get("/search", requireAuth, sketchfabController.search.bind(sketchfabController));
-router.get("/models/:id", requireAuth, sketchfabController.getModel.bind(sketchfabController));
+// Sketchfab routes - public so frontend can load assets without auth
+router.get("/search", sketchfabController.search.bind(sketchfabController));
+router.get("/models/:id", sketchfabController.getModel.bind(sketchfabController));
+router.get("/models/:id/download", sketchfabController.getDownload.bind(sketchfabController));
 
 export default router;
