@@ -3,10 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { fetchAssetById, toggleLikeAsset, buyAsset, downloadAsset } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Asset = any;
+
 const AssetDetailPage: React.FC = () => {
     const { id } = useParams();
     const { user, isAuthenticated, updateUser } = useAuth();
-    const [asset, setAsset] = useState<any>(null);
+    const [asset, setAsset] = useState<Asset>(null);
     const [loading, setLoading] = useState(true);
     const [downloading, setDownloading] = useState(false);
     const [buyingState, setBuyingState] = useState<'idle' | 'buying' | 'done'>('idle');
@@ -59,7 +62,7 @@ const AssetDetailPage: React.FC = () => {
                 // Fallback: open the Sketchfab model page
                 window.open(`https://sketchfab.com/3d-models/${assetId}`, '_blank');
             }
-        } catch (err) {
+        } catch {
             // Fallback: open the Sketchfab model page
             window.open(`https://sketchfab.com/3d-models/${assetId}`, '_blank');
         }

@@ -8,6 +8,7 @@ const HomePage: React.FC = () => {
     const { login } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [assets, setAssets] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -26,9 +27,10 @@ const HomePage: React.FC = () => {
             const externalAssets = data.external || [];
             
             setAssets([...localAssets, ...externalAssets]);
-        } catch (err: any) {
+        } catch (err: unknown) {
+            const axiosErr = err as { response?: { data?: { error?: string } } };
             console.error('Failed to load assets', err);
-            setError(err.response?.data?.error || 'Failed to communicate with the server.');
+            setError(axiosErr.response?.data?.error || 'Failed to communicate with the server.');
             setAssets([]);
         }
         setLoading(false);

@@ -28,8 +28,9 @@ const SellPage: React.FC = () => {
         try {
             const updatedUser = await becomeSeller();
             updateUser(updatedUser);
-        } catch (err: any) {
-            setError(err.response?.data?.error || 'Failed to upgrade account.');
+        } catch (err: unknown) {
+            const axiosErr = err as { response?: { data?: { error?: string } } };
+            setError(axiosErr.response?.data?.error || 'Failed to upgrade account.');
         } finally {
             setLoading(false);
         }
@@ -52,8 +53,9 @@ const SellPage: React.FC = () => {
 
             await createAsset(formData);
             navigate('/'); // Redirect to marketplace on success
-        } catch (err: any) {
-            setError(err.response?.data?.error || 'Failed to create asset.');
+        } catch (err: unknown) {
+            const axiosErr = err as { response?: { data?: { error?: string } } };
+            setError(axiosErr.response?.data?.error || 'Failed to create asset.');
         } finally {
             setLoading(false);
         }

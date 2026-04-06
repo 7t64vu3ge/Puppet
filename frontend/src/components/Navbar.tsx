@@ -14,7 +14,6 @@ const Navbar: React.FC = () => {
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
                 <Link to="/" className="btn btn-ghost" style={{ border: 'none' }}>Explore</Link>
-                {isAuthenticated && <Link to="/seller-id" className="btn btn-ghost" style={{ border: 'none' }}>Get Seller ID</Link>}
                 
                 {/* Dynamic Sell Link */}
                 <Link to="/sell" className="btn btn-ghost" style={{ border: 'none' }}>
