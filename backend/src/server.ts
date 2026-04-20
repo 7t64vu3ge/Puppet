@@ -3,12 +3,14 @@ import app from "./app.js";
 import { connectDB } from "./config/db.js";
 
 const startServer = async () => {
+    const port = Number(process.env.PORT || 4000);
+
     // 1. Connect to MongoDB
     await connectDB();
 
     // 2. Start Express Server
-    app.listen(process.env.PORT || 4000, () =>
-        console.log(`Server running on http://localhost:4000`)
+    app.listen(port, "0.0.0.0", () =>
+        console.log(`Server running on port ${port}`)
     );
 };
 

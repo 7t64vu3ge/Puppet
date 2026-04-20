@@ -46,10 +46,8 @@ const AssetDetailPage: React.FC = () => {
     const handleDownload = async () => {
         if (!assetId) return;
         
-        // If the asset has a local fileUrl, download it directly
         if (asset.fileUrl) {
-            const downloadUrl = `http://localhost:4000${asset.fileUrl}`;
-            window.open(downloadUrl, '_blank');
+            window.open(asset.fileUrl, '_blank');
             return;
         }
 

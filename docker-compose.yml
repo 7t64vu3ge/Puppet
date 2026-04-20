@@ -1,17 +1,21 @@
 services:
   backend:
-    image: ghcr.io/${OWNER}/puppet-backend:latest
+    build:
+      context: ./backend
+    image: puppet-backend:local
     container_name: puppet-backend
     restart: always
     ports:
       - "4000:4000"
     env_file:
-      - .env.backend
+      - backend/.env
     networks:
       - puppet-network
 
   frontend:
-    image: ghcr.io/${OWNER}/puppet-frontend:latest
+    build:
+      context: ./frontend
+    image: puppet-frontend:local
     container_name: puppet-frontend
     restart: always
     ports:

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: '', // Proxied to backend via Vite
+    baseURL: '', // Same-origin in production, proxied to the backend during local Vite development.
 });
 
 // Attach JWT token to requests if available

@@ -13,8 +13,7 @@ const LoginPage: React.FC = () => {
     }, [isAuthenticated, navigate]);
 
     const handleGoogleLogin = () => {
-        // In production, this would be your backend URL
-        window.location.href = 'http://localhost:4000/auth/google';
+        window.location.href = '/auth/google';
     };
 
     return (

@@ -1,0 +1,45 @@
+{
+  "family": "puppet-frontend",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "__ECS_EXECUTION_ROLE_ARN__",
+  "containerDefinitions": [
+    {
+      "name": "puppet-frontend",
+      "image": "123456789012.dkr.ecr.__AWS_REGION__.amazonaws.com/puppet-frontend:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "name": "http",
+          "containerPort": 80,
+          "hostPort": 80,
+          "protocol": "tcp",
+          "appProtocol": "http"
+        }
+      ],
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -fsS http://127.0.0.1/health || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 15
+      },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-create-group": "true",
+          "awslogs-group": "/ecs/puppet-frontend",
+          "awslogs-region": "__AWS_REGION__",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
